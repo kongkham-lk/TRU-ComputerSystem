@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-int getSum(float nums[]);
-void getTotal(float tar[], float ref1[], float ref2[], float ref3[], float ref4[], float ref5[]);
+void getTotalSaleByCountries(float nums[], float *sum); // compute for the end of each row
+void getTotalSaleByYear(float tar[], float ref1[], float ref2[], float ref3[], float ref4[], float ref5[]); // compute for the last row
 
 int main()
 {
@@ -21,22 +21,20 @@ int main()
     float totalSaleByYear[yearSize + 1];
 
     // get the total sum of each country
-    totalSaleByCountries[0] = getSum(saleUSA);
-    totalSaleByCountries[1] = getSum(saleGermany);
-    totalSaleByCountries[2] = getSum(saleUK);
-    totalSaleByCountries[3] = getSum(saleJapan);
-    totalSaleByCountries[4] = getSum(saleRest);
+    getTotalSaleByCountries(saleUSA, &totalSaleByCountries[0]);
+    getTotalSaleByCountries(saleGermany, &totalSaleByCountries[1]);
+    getTotalSaleByCountries(saleUK, &totalSaleByCountries[2]);
+    getTotalSaleByCountries(saleJapan, &totalSaleByCountries[3]);
+    getTotalSaleByCountries(saleRest, &totalSaleByCountries[4]);
 
     // get the total sum of each year and the total col as well
-    getTotal(totalSaleByYear, saleUSA, saleGermany, saleUK, saleJapan, saleRest);
-    totalSaleByYear[6] = getSum(totalSaleByCountries);
+    getTotalSaleByYear(totalSaleByYear, saleUSA, saleGermany, saleUK, saleJapan, saleRest);
+    getTotalSaleByCountries(totalSaleByCountries, &totalSaleByYear[6]);
 
     // print sales report to console
     printf("\n%55s\n\n", "Amazon Sales (billions, US $)"); // print title
     for (int i = 0; i < sizeof(*year); i++)                // print year header
-    {
         printf("%10s", year[i]);
-    }
 
     for (int i = 0; i < countriesSize; i++)
     {
@@ -45,54 +43,37 @@ int main()
 
         // get the target country's array to display in each row by using ref
         if (i == 0)
-        {
             target = saleUSA;
-        }
         else if (i == 1)
-        {
             target = saleGermany;
-        }
         else if (i == 2)
-        {
             target = saleUK;
-        }
         else if (i == 3)
-        {
             target = saleJapan;
-        }
         else if (i == 4)
-        {
             target = saleRest;
-        }
 
         // print the target country's sale for each row
         for (int i = 0; i < yearSize; i++)
-        {
             printf("%10.1f", target[i]);
-        }
 
         printf("%10.1f", totalSaleByCountries[i]); // print the total sale of each country
     }
 
     printf("\n%-10s", countries[5]);
     for (int i = 0; i < yearSize + 1; i++) // print the total sale of each year
-    {
         printf("%10.1f", totalSaleByYear[i]);
-    }
+        
     printf("\n\n");
 }
 
-int getSum(float nums[])
+void getTotalSaleByCountries(float nums[], float *sum)
 {
-    float sum = 0;
     for (int i = 0; i < sizeof(*nums); i++)
-    {
-        sum += nums[i];
-    }
-    return sum;
+        *sum += nums[i];
 }
 
-void getTotal(float tar[], float ref1[], float ref2[], float ref3[], float ref4[], float ref5[])
+void getTotalSaleByYear(float tar[], float ref1[], float ref2[], float ref3[], float ref4[], float ref5[])
 {
     for (int i = 0; i < 6; i++)
     {
